@@ -1,6 +1,7 @@
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Dungeon {
 	
@@ -8,34 +9,99 @@ public class Dungeon {
 	
 	Tile wall = new Tile('#', true, "#878787");
 	Tile floor = new Tile('.', false, "#878787");
-	Tile layout[][] = {
-			{wall, floor, floor, floor, floor, wall, floor, floor, floor, wall},
-			{floor, floor, floor, floor, wall, wall, floor, floor, floor, floor},
-			{floor, floor, floor, floor, floor, floor, floor, floor, floor, floor},
-			{floor, floor, floor, floor, floor, floor, floor, floor, floor, floor},
-			{floor, floor, floor, floor, floor, floor, floor, floor, floor, floor},
-			{floor, floor, floor, floor, floor, floor, floor, floor, floor, floor},
-			{floor, floor, floor, floor, floor, floor, floor, floor, floor, floor},
-			{floor, floor, floor, floor, floor, floor, floor, floor, floor, floor},
-			{floor, floor, floor, floor, floor, floor, floor, floor, floor, floor},
-			{floor, floor, floor, floor, floor, floor, floor, floor, floor, floor},
-			
-	};
+	Tile empty = new Tile(' ',true, "878787");
+	Tile layout[][] = new Tile[50][50];
 	
 
 	
 	
-	Entity entities[][] = new Entity [10][10];
+	Entity entities[][] = new Entity [50][50];
 	
 	
 	
 	Dungeon() {
 
+		
+		
+		for(int i = 0; i < layout[0].length; i++) {
+			for (int n = 0; n < layout[1].length; n++) {
+			
+					layout[i][n]=empty;
+				
+			}
+		}
+		int rooms=0;
+		int width;
+		int length;
+		int startRow;
+		int startCol;
+		do{
+//			width=0;
+//			length=0;
+//			startRow=0;
+//			startCol=0;
+			boolean emptyRoom = true;
+			do {
+				emptyRoom = true;
+				Random rnd = new Random();
+				width = rnd.nextInt(11-4+1)+4;
+				length = rnd.nextInt(11-4+1)+4;
+				startCol = rnd.nextInt(50)+1;
+				startRow = rnd.nextInt(50)+1;
+				if(startCol+width>=50||startRow+length>=50) {
+					emptyRoom=false;
+				}else {
+					for(int i = startCol; i < (startCol+width); i++) {
+						for (int n = startRow; n < (startRow+length); n++) {
+							
+							if(layout[i][n]==floor) {
+								emptyRoom=false;
+							}
+						}
+					}
+				}
+				
+				
+			}while(emptyRoom==false);
+			//System.out.println(width);
+			//System.out.println(length);
+			//System.out.println(startCol);
+			//System.out.println(startRow);
+			
+			//create room
+			//for(int i = startCol; i <= (startCol+width); i++) {
+			//	layout[i][startCol]=wall;
+			//	layout[i][startCol+width]=wall;
+			//}
+			//for(int i = startRow; i <= (startRow+length); i++) {
+			//	layout[startRow][i]=wall;
+			//	layout[startRow+length][i]=wall;
+			//}
+			if(startCol+width<50&&startRow+length<50) {
+				for(int i = startCol; i <= (startCol+width); i++) {
+					for (int n = startRow; n <= (startRow+length); n++) {
+					
+						
+						if(layout[i][n]!=empty||layout[i][n]!=floor) {
+							layout[i][n]=floor;
+						}
+						
+						
+						
+					}
+				}
+			}
+			else if(startCol+width>=50||startRow+length>=50) {
+				rooms--;
+			}
+			rooms++;
+		}while(rooms<25);
+		rooms=0;
 		for(int i = 0; i < entities[0].length; i++) {
 			for (int n = 0; n < entities[1].length; n++) {
 				//entities[i][n].setIcon(layout[i][n].getIcon());
 				
-				entities[i][n] = new Entity (layout[i][n].getIcon(), false, layout[i][n].getColor()); 				
+				entities[i][n] = new Entity (layout[i][n].getIcon(), layout[i][n].isSolid() , layout[i][n].getColor()); 				
 				//entities[i][n].setColor(layout[i][n].getColor());
 				//entities[i][n].setSolid(false);
 			}
@@ -76,7 +142,7 @@ public class Dungeon {
 				}
 				else {
 				writer.println("<div>" + layout[row][column].getIcon() +  "</div>");
-				//System.out.print("<div>" + layout[row][column].letter +  "</div>");
+				System.out.print("<div>" + layout[row][column].getIcon() +  "</div>");
 				}
 				//System.out.println();
 			}
