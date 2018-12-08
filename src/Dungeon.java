@@ -7,14 +7,11 @@ public class Dungeon {
 	
 	
 	
-	Tile wall = new Tile('#', true, "#878787");
+	Tile path = new Tile('=', false, "#878787");
 	Tile floor = new Tile('.', false, "#878787");
 	Tile empty = new Tile(' ',true, "878787");
 	Tile layout[][] = new Tile[50][50];
-	
 
-	
-	
 	Entity entities[][] = new Entity [50][50];
 	
 	
@@ -97,6 +94,128 @@ public class Dungeon {
 			rooms++;
 		}while(rooms<25);
 		rooms=0;
+		//create vertical paths
+		int paths=0;
+		do {
+			boolean room = true;
+			do {
+				room=true;
+				Random rnd = new Random();
+				
+				length = 5;
+				startCol = rnd.nextInt(50)+1;
+				startRow = rnd.nextInt(50)+1;
+				
+				if(startCol+length>=50||startRow+length>=50) {
+					room=false;
+				}
+//				else {
+//					for(int i = startCol; i < (startCol+length); i++) {
+//						for (int n = startRow; n < (startRow+length); n++) {
+//							
+//							if(layout[i][n]!=floor) {
+//								room=false;
+//							}
+//						}
+//					}
+//				}
+			}while(room==false);
+			
+			
+			int row=startRow;
+			for(int n = startCol; n < 50; n++) {
+				if(layout[n][row]==floor) {
+					for(int i = startCol; i < 50; i++) {
+						if(layout[i][row]==empty) {
+						
+							for(int x = i; x < 50; x++) {
+								if(layout[x][row]==floor) {
+									
+									for(int col = i; col < x; col++) {
+										layout[col][row]=path;
+									}
+									break;
+								}
+								else if(x==49){
+									paths--;
+								}
+							}
+							break;
+						}
+						else if(i==49){
+							paths--;
+						}
+					}
+					break;
+				}
+				else if(n==49){
+					paths--;
+				}
+			}
+			paths++;
+		}while(paths<30);
+		
+		//horizontal paths
+		paths=0;
+		do {
+			boolean room = true;
+			do {
+				room=true;
+				Random rnd = new Random();
+				
+				length = 5;
+				startCol = rnd.nextInt(50)+1;
+				startRow = rnd.nextInt(50)+1;
+				
+				if(startCol+length>=50||startRow+length>=50) {
+					room=false;
+				}
+//				else {
+//					for(int i = startCol; i < (startCol+length); i++) {
+//						for (int n = startRow; n < (startRow+length); n++) {
+//							
+//							if(layout[i][n]!=floor) {
+//								room=false;
+//							}
+//						}
+//					}
+//				}
+			}while(room==false);
+			
+			
+			int col=startCol;
+			for(int n = startRow; n < 50; n++) {
+				if(layout[col][n]==floor) {
+					for(int i = startRow; i < 50; i++) {
+						if(layout[col][i]==empty) {
+						
+							for(int x = i; x < 50; x++) {
+								if(layout[col][x]==floor) {
+									
+									for(int row = i; row < x; row++) {
+										layout[col][row]=path;
+									}
+									break;
+								}
+								else if(x==49){
+									paths--;
+								}
+							}
+							break;
+						}
+						else if(i==49){
+							paths--;
+						}
+					}
+					break;
+				}
+				else if(n==49){
+					paths--;
+				}
+			}
+			paths++;
+		}while(paths<30);
+		
 		for(int i = 0; i < entities[0].length; i++) {
 			for (int n = 0; n < entities[1].length; n++) {
 				//entities[i][n].setIcon(layout[i][n].getIcon());
