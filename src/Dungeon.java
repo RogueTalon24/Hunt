@@ -7,9 +7,9 @@ public class Dungeon {
 	
 	
 	
-	Tile path = new Tile('=', false, "#878787");
+	Tile path = new Tile('#', false, "#878787");
 	Tile floor = new Tile('.', false, "#878787");
-	Tile empty = new Tile(' ',true, "878787");
+	Tile wall = new Tile('|',true, "#878787");
 	Tile layout[][] = new Tile[50][50];
 
 	Entity entities[][] = new Entity [50][50];
@@ -23,7 +23,7 @@ public class Dungeon {
 		for(int i = 0; i < layout[0].length; i++) {
 			for (int n = 0; n < layout[1].length; n++) {
 			
-					layout[i][n]=empty;
+					layout[i][n]=wall;
 				
 			}
 		}
@@ -79,7 +79,7 @@ public class Dungeon {
 					for (int n = startRow; n <= (startRow+length); n++) {
 					
 						
-						if(layout[i][n]!=empty||layout[i][n]!=floor) {
+						if(layout[i][n]!=wall||layout[i][n]!=floor) {
 							layout[i][n]=floor;
 						}
 						
@@ -126,7 +126,7 @@ public class Dungeon {
 			for(int n = startCol; n < 50; n++) {
 				if(layout[n][row]==floor) {
 					for(int i = startCol; i < 50; i++) {
-						if(layout[i][row]==empty) {
+						if(layout[i][row]==wall) {
 						
 							for(int x = i; x < 50; x++) {
 								if(layout[x][row]==floor) {
@@ -187,7 +187,7 @@ public class Dungeon {
 			for(int n = startRow; n < 50; n++) {
 				if(layout[col][n]==floor) {
 					for(int i = startRow; i < 50; i++) {
-						if(layout[col][i]==empty) {
+						if(layout[col][i]==wall) {
 						
 							for(int x = i; x < 50; x++) {
 								if(layout[col][x]==floor) {
