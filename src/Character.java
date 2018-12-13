@@ -53,19 +53,23 @@ public class Character implements Serializable {
 		this.x = x;
 	}
 
+	public void setY(int y) {
+		this.y = y;
+	}
+	
 	public int getY() {
 		return y;
 	}
 
-	public void move(int x, int y, Dungeon d) {
-		if ((this.x + x) < d.getWidth() && (this.x + x > -1)
-			&& (this.y + y) < d.getHeight() && (this.y + y > -1)) {
-				if (d.getTile(this.y + y, this.x + x).isSolid() == false) {
-					d.changeEntities(this.y, this.x, d.getTile(this.y, this.x).getIcon(),
-							d.getTile(this.y, this.x).getColor());
+	public void move(int x, int y, Dungeon dungeon) {
+		if ((this.x + x) < dungeon.getWidth() && (this.x + x > -1)
+			&& (this.y + y) < dungeon.getHeight() && (this.y + y > -1)) {
+				if (dungeon.getTile(this.y + y, this.x + x).isSolid() == false) {
+					dungeon.changeEntities(this.y, this.x, dungeon.getTile(this.y, this.x).getIcon(),
+							dungeon.getTile(this.y, this.x).getColor());
 					this.x += x;
 					this.y += y;
-					d.changeEntities(this.y, this.x, this.icon, this.color);
+					dungeon.changeEntities(this.y, this.x, this.icon, this.color);
 					Game.log = ("Move Freely");
 				}
 				else {
