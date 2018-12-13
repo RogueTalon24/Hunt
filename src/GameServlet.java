@@ -114,10 +114,11 @@ public class GameServlet extends HttpServlet {
 			floor--;
 			if(floor<0) {
 				floor++;
+			}else {
+				up = dungeon[floor].getUpFloor();
+				player.setX(up[1]);
+				player.setY(up[0]);
 			}
-			up = dungeon[floor].getUpFloor();
-			player.setX(up[1]);
-			player.setY(up[0]);
 		}
 		
 		//check inventory for item
