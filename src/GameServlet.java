@@ -25,16 +25,30 @@ public class GameServlet extends HttpServlet {
     }
     int counter = 0;
     boolean firstPrint = true;
-    Dungeon dungeon = new Dungeon();
-    Player player = new Player("Dave", 10, 10, 10, '@', "#FFFF00"
-			, 0, 1);
     
+    //create 10 separate dungeons and store in an array of dungeons?
+    //have a current dungeon floor variable
+    Dungeon dungeon1 = new Dungeon();
+    Dungeon dungeon2 = new Dungeon();
+    Dungeon dungeon3 = new Dungeon();
+    Dungeon dungeon4 = new Dungeon();
+    Dungeon dungeon5 = new Dungeon();
+    Dungeon dungeon6 = new Dungeon();
+    Dungeon dungeon7 = new Dungeon();
+    Dungeon dungeon8 = new Dungeon();
+    Dungeon dungeon9 = new Dungeon();
+    Dungeon dungeon10 = new Dungeon();
+    Dungeon[] dungeon = {dungeon1,dungeon2,dungeon3,dungeon4,dungeon5,dungeon6,dungeon7,dungeon8,dungeon9,dungeon10};
+    int floor = 0;
+    
+    int[] location = dungeon[floor].getLocation();
+    Player player = new Player("Dave", 10, 10, 10, '@', "#FFFF00",location[1],location[0]);
+   
 	
-    
+    int[] monLocation = dungeon[floor].getLocation();
 	Monster monster = new Monster("goblin", 10, 1, 1, 1, Game.club, null, 'G', "#006400"
-			, 0, 2);
+			, (monLocation[1]),(monLocation[0]));
 	
-    
    // dungeon.firstPrint(out);
    //dungeon.addActor(player);
     
@@ -48,6 +62,8 @@ public class GameServlet extends HttpServlet {
 		//	dungeon.addActor(player);
 	//		firstPrint = false;
 		//}
+		
+		
 		response.setContentType("text/html");
 		int key = Integer.parseInt(request.getParameter("key"));
 		PrintWriter out = response.getWriter();
@@ -60,16 +76,16 @@ public class GameServlet extends HttpServlet {
 		
 		switch (key) {
 			case 38: // up
-				player.move(0, -1, dungeon);
+				player.move(0, -1, dungeon[floor]);
 				break;
 			case 37: // left
-				player.move(-1, 0, dungeon);
+				player.move(-1, 0, dungeon[floor]);
 				break;
 			case 39: // right
-				player.move(1, 0, dungeon);
+				player.move(1, 0, dungeon[floor]);
 				break;
 			case 40: // down
-				player.move( 0, 1, dungeon);
+				player.move( 0, 1, dungeon[floor]);
 				break;
 			case 75: // k
 				//player.setY(2);
@@ -77,8 +93,41 @@ public class GameServlet extends HttpServlet {
 				//player.setX(0);
 				break;
 		}
-		Game.update(dungeon);
-		Game.display(out, dungeon);
+		
+		//if player on upfloor tile then move to next dungeon floor
+		int[] up = dungeon[floor].getUpFloor();
+		int[] down = dungeon[floor].getDownFloor();
+		
+		if(player.getX()==up[1]&&player.getY()==up[0]){
+			floor++;
+			if(floor>9) {
+				floor--;
+			}
+			down = dungeon[floor].getDownFloor();
+			player.setX(down[1]);
+			player.setY(down[0]);
+		}
+		//if player on downfloor tile then move to down dungeon floor
+		else if(player.getX()==down[1]&&player.getY()==down[0]){
+			floor--;
+			if(floor<0) {
+				floor++;
+			}
+			up = dungeon[floor].getUpFloor();
+			player.setX(up[1]);
+			player.setY(up[0]);
+		}
+		
+		//check inventory for item
+		if(floor>9) {
+			floor--;
+		}
+		
+		//set player new location
+		//have to clear previous character from previous floor
+		
+		Game.update(dungeon[floor]);
+		Game.display(out, dungeon[floor]);
 		//dungeon.firstPrint(out);
 		
 		//out.print(counter);
