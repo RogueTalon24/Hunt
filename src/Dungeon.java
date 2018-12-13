@@ -5,21 +5,20 @@ import java.util.Random;
 
 public class Dungeon {
 	
+	//Dungeon[] dungeon = new Dungeon[10];// array of dungeons
 	
 	
 	Tile path = new Tile('#', false, "#878787");
 	Tile floor = new Tile('.', false, "#878787");
-	Tile wall = new Tile('|',true, "#878787");
+	Tile wall = new Tile(' ',true, "#878787");
+	Tile upFloor = new Tile('%',false, "#009900");//green
+	Tile downFloor = new Tile('%',false, "#000099");//blue
 	Tile layout[][] = new Tile[50][50];
 
 	Entity entities[][] = new Entity [50][50];
 	
-	
-	
 	Dungeon() {
-
-		
-		
+	
 		for(int i = 0; i < layout[0].length; i++) {
 			for (int n = 0; n < layout[1].length; n++) {
 			
@@ -215,6 +214,10 @@ public class Dungeon {
 			}
 			paths++;
 		}while(paths<30);
+		int[] up = getLocation();
+		int[] down = getLocation();
+		layout[up[0]][up[1]] = upFloor;
+		layout[down[0]][down[1]] = downFloor;
 		
 		for(int i = 0; i < entities[0].length; i++) {
 			for (int n = 0; n < entities[1].length; n++) {
@@ -300,6 +303,53 @@ public class Dungeon {
 	}
 	
 
+	public int[] getLocation() {
+		int location[] = new int[2];
+		boolean room=true;
+		int col=0;
+		int row=0;
+		do {
+			room=true;
+			Random rnd = new Random();
+			col = rnd.nextInt(48)+1;
+			row = rnd.nextInt(48)+1;
+			if(layout[row][col]==floor&&(layout[row][col]!=wall||layout[row][col]!=path)) {
+				room=true;
+			}else {
+				room=false;
+			}
+		}while(room==false);
+		location[1]=col;
+		location[0]=row;
+		
+		return location;
+	}
 	
 	
+	//method to get floor up location
+	public int[] getUpFloor() {
+		int[] up= {0,0};
+		for(int i = 0; i < 50; i++) {
+			for (int n = 0; n < 50; n++) {
+				if(layout[i][n]==upFloor) {
+					up[0]=i;
+					up[1]=n;
+				}
+			}
+		}
+		return up;
+	}
+	//method to get floor down location
+	public int[] getDownFloor() {
+		int[] down= {0,0};
+		for(int i = 0; i < 50; i++) {
+			for (int n = 0; n < 50; n++) {
+				if(layout[i][n]==downFloor) {
+					down[0]=i;
+					down[1]=n;
+				}
+			}
+		}
+		return down;
+	}
 }
