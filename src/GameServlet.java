@@ -102,10 +102,12 @@ public class GameServlet extends HttpServlet {
 			floor++;
 			if(floor>9) {
 				floor--;
+				
+			}else {
+				down = dungeon[floor].getDownFloor();
+				player.setX(down[1]);
+				player.setY(down[0]);
 			}
-			down = dungeon[floor].getDownFloor();
-			player.setX(down[1]);
-			player.setY(down[0]);
 		}
 		//if player on downfloor tile then move to down dungeon floor
 		else if(player.getX()==down[1]&&player.getY()==down[0]){
